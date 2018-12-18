@@ -1,0 +1,56 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ems" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/ems-%d{yyyy-MM-dd}.%i.logback</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="console" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>logs/console.logback</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>logs/console.%i.logback</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>3</maxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="ems" />
+    </root>
+    <!-- 以下这个必须屏蔽，否则影响wrapper以windows服务启动 -->
+    <logger name="org.springframework.beans.factory.support.DefaultListableBeanFactory" level="error">
+    </logger>
+    <logger name="org.apache.zookeeper.server.PrepRequestProcessor" level="error">
+    </logger>
+    <logger name="com.alibaba.dubbo.registry.zookeeper.ZookeeperRegistry" level="warn">
+    </logger>
+    <logger name="com.alibaba.dubbo.config.AbstractConfig" level="error">
+    </logger>
+    <logger name="com.topvision" level="info">
+    </logger>
+    <logger name="com.topvision.console" level="info" additivity="false">
+        <appender-ref ref="console" />
+    </logger>
+    <logger name="org.eclipse.jetty.server" level="info" additivity="false">
+        <appender-ref ref="console" />
+    </logger>
+</configuration>

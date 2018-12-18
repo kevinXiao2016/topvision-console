@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<client>
+	<font style="PLAIN" size="12" name="宋体" />
+	<!-- <font style="PLAIN" size="14" name="宋体"/> <font style="PLAIN" size="12" 
+		name="Tahoma"/> -->
+	<!-->menuitem key="" name="" mnemonic="" icon="" disabledIcon="" accelerator="" 
+		statusInfo="" action=""/ -->
+	<menubar>
+		<menu key="fileMenu" name="文件(F)" mnemonic="F"
+			listener="com.topvision.console.action.FileMenuListener">
+			<menuitem key="exit" name="退出(X)" mnemonic="X"
+				action="com.topvision.console.action.ExitAction" statusInfo=""
+				accelerator="alt F4" />
+		</menu>
+		<menu key="helpMenu" name="帮助(H)" mnemonic="H"
+			listener="com.topvision.console.action.HelpMenuListener">
+			<menuitem key="aboutItem" name="关于 jConsole(A)" mnemonic="A"
+				action="com.topvision.console.action.AboutAction" statusInfo="显示程序信息、版本号和版权" />
+		</menu>
+	</menubar>
+	<toolbars></toolbars>
+</client>

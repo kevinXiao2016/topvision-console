@@ -1,0 +1,98 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ems" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/ems-%d{yyyy-MM-dd}.%i.logback</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>5</maxHistory>
+            <totalSizeCap>1000mb</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="mybatis" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/mybatis-%d{yyyy-MM-dd}.%i.logback</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="snmp" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>logs/snmp.logback</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/snmp-%d{yyyy-MM-dd}.%i.logback</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="console" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>logs/console.logback</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>logs/console.%i.logback</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>3</maxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="RefreshCollect" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>logs/RefreshCollect.logback</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/RefreshCollect-%d{yyyy-MM-dd}.%i.logback</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="ems" />
+    </root>
+
+    <!-- 以下这个必须屏蔽，否则影响wrapper以windows服务启动 -->
+    <logger name="org.springframework.beans.factory.support.DefaultListableBeanFactory" level="error">
+    </logger>
+    <logger name="com.topvision" level="info">
+    </logger>
+    <logger name="org.apache.zookeeper" level="info">
+    </logger>
+    <logger name="com.topvision.framework.snmp" level="info" additivity="true">
+        <appender-ref ref="snmp" />
+    </logger>
+    <logger name="org.snmp4j" level="info" additivity="true">
+        <appender-ref ref="snmp" />
+    </logger>
+    <logger name="com.topvision.console" level="info" additivity="true">
+        <appender-ref ref="console" />
+    </logger>
+    <logger name="org.eclipse.jetty.server" level="info" additivity="true">
+        <appender-ref ref="console" />
+    </logger>
+    <logger name="com.topvision.refreshCollect" level="info" additivity="true">
+        <appender-ref ref="RefreshCollect" />
+    </logger>
+</configuration>

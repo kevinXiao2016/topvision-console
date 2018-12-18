@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Console" basedir="." default="deploy-console">
+
+	<!--+===================================================================+-->
+	<!--|                       Initialization                              |-->
+	<!--+===================================================================+-->
+	<!-- init -->
+	<target name="init">
+		<tstamp>
+			<format property="build.time" pattern="MM/dd/yyyy hh:mm aa" />
+		</tstamp>
+
+		<property name="root.dir" value=".." />
+		<property name="project.dir" value="../.." />
+		<property name="build.dir" value="${root.dir}/.build" />
+		<property name="dist.dir" value="${root.dir}/dist" />
+		<property name="src.dir" value="${root.dir}/src" />
+		<property name="java.dir" value="${src.dir}/java" />
+		<property name="resources.dir" value="${java.dir}/resources" />
+		<property name="META-INF.dir" value="${java.dir}/META-INF" />
+		<property name="web.dir" value="${root.dir}/webapp" />
+		<property name="docs.dir" value="${root.dir}/docs" />
+		<property name="lib.dir" value="${root.dir}/lib" />
+		<property name="launch4j.dir" location="${root.dir}/launch4j" />
+
+		<path id="third-party">
+			<fileset dir="${lib.dir}">
+				<include name="**/*.jar" />
+			</fileset>
+		</path>
+
+		<path id="dist.classpath">
+			<pathelement path="${build.dir}" />
+			<fileset dir="${dist.dir}">
+				<include name="*.jar" />
+			</fileset>
+		</path>
+	</target>
+
+	<!-- clean -->
+	<target name="clean" depends="init">
+		<delete dir="${build.dir}" />
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${dist.dir}" />
+	</target>
+
+	<!--+===================================================================+-->
+	<!--|                          Deploy                                   |-->
+	<!--+===================================================================+-->
+	<!-- deploy cobra -->
+	<target name="deploy-console" depends="compile-console,i18n">
+		<copy todir="${build.dir}">
+			<fileset dir="${java.dir}">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+		<jar jarfile="${dist.dir}/jconsole-1.0.1.jar">
+			<fileset dir="${build.dir}">
+				<include name="**/*" />
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="i18n" depends="init">
+		<patternset id="resources">
+			<include name="*.properties" />
+		</patternset>
+		<native2ascii src="${resources.dir}" dest="${build.dir}/resources">
+			<patternset refid="resources" />
+		</native2ascii>
+	</target>
+
+	<!--+===================================================================+-->
+	<!--|                       compile console                                  |-->
+	<!--+===================================================================+-->
+	<target name="compile-console" depends="clean">
+		<patternset id="sources">
+			<include name="com/topvision/console/**/*.java" />
+			<include name="org/**/*.java" />
+		</patternset>
+		<javac destdir="${build.dir}" srcdir="${java.dir}" debug="on" optimize="yes">
+			<patternset refid="sources" />
+			<classpath>
+				<path refid="third-party" />
+				<pathelement location="${build.dir}" />
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="deploy-exe" depends="deploy-console">
+		<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" classpath="${launch4j.dir}/launch4j.jar
+			:${launch4j.dir}/lib/xstream.jar" />
+		<launch4j configFile="${root.dir}/conf/launch4j.xml" />
+	</target>
+
+	<target name="deploy-jetty" depends="deploy-console">
+		<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" classpath="${launch4j.dir}/launch4j.jar
+			:${launch4j.dir}/lib/xstream.jar" />
+		<launch4j configFile="${root.dir}/conf/launch4j-jetty.xml" />
+	</target>
+
+	<!--+===================================================================+-->
+	<!--|                       doc console                                  |-->
+	<!--+===================================================================+-->
+
+	<target name="doc-common" depends="init">
+		<javadoc packagenames="com.topvision.console.*" sourcepath="${java.dir}" defaultexcludes="yes" destdir="${docs.dir}" author="true" version="true" use="true" windowtitle="RUN-COMMON API">
+			<doctitle>
+				<![CDATA[<h1>RUN-COMMON API</h1>]]></doctitle>
+			<bottom>
+				<![CDATA[<i>Copyright &#169; 2005 Ultr@power Corp. All Rights Reserved.</i>]]></bottom>
+			<tag name="todo" scope="all" description="To do:" />
+			<group title="Group 1 Packages" packages="com.dummy.test.a*" />
+			<group title="Group 2 Packages" packages="com.dummy.test.b*:com.dummy.test.c*" />
+			<link offline="true" href="http://java.sun.com/products/jdk/1.2/docs/api/" packagelistLoc="C:\tmp" />
+			<link href="http://developer.java.sun.com/developer/products/xml/docs/api/" />
+		</javadoc>
+	</target>
+</project>

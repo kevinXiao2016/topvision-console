@@ -1,0 +1,8 @@
+
+/logs
+/.build
+/tmp
+/.classes
+/.settings
+/zookeeper
+/felix-cache
